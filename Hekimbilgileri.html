@@ -399,6 +399,7 @@
         opt.textContent = il;
         ilSelect.appendChild(opt);
       });
+      restoreFormFromCookie(); // İl/ilçe doldurulduktan sonra restore
     });
 
   document.getElementById('ilSelect').addEventListener('change', function() {
@@ -420,12 +421,18 @@
       ilceSelect.appendChild(opt);
     });
     if (ilceSet.size > 0) ilceSelect.disabled = false;
+    saveFormToCookie();
   });
 
-  // Form submit ve cookie kaydetme
-  document.getElementById('userForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const formData = new FormData(this);
+  // Her input/select/checkbox değiştiğinde cookie'ye kaydet
+  document.querySelectorAll('#userForm input, #userForm select').forEach(el => {
+    el.addEventListener('change', saveFormToCookie);
+    el.addEventListener('input', saveFormToCookie);
+  });
+
+  // Form verisini cookie'ye kaydet
+  function saveFormToCookie() {
+    const formData = new FormData(document.getElementById('userForm'));
     const obj = {};
     for (let [key, value] of formData.entries()) {
       // Aynı isimli checkbox'lar için dizi olarak kaydet
@@ -436,9 +443,71 @@
         obj[key] = value;
       }
     }
+    // Checkboxlar için işaretli olanları da ekle
+    document.querySelectorAll('#userForm input[type="checkbox"]').forEach(cb => {
+      if (!obj[cb.name] && cb.checked) obj[cb.name] = cb.value;
+    });
     document.cookie = "hekimForm=" + encodeURIComponent(JSON.stringify(obj)) + ";path=/;max-age=31536000";
-    alert("Bilgiler kaydedildi!");
-  });
+  }
+
+  // Cookie'den formu doldur
+  function restoreFormFromCookie() {
+    function getCookie(name){
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(";");
+      for(let i = 0; i < ca.length; i++){
+        let c = ca[i].trim();
+        if(c.indexOf(nameEQ) === 0)
+          return decodeURIComponent(c.substring(nameEQ.length));
+      }
+      return null;
+    }
+    let hekimFormCookie = getCookie("hekimForm");
+    if (!hekimFormCookie) return;
+    let obj = {};
+    try { obj = JSON.parse(hekimFormCookie); } catch(e){ return; }
+    // Select, input, checkbox doldur
+    Object.keys(obj).forEach(key => {
+      const val = obj[key];
+      const els = document.querySelectorAll(`[name="${key}"]`);
+      els.forEach(el => {
+        if (el.type === "checkbox" || el.type === "radio") {
+          if (Array.isArray(val)) {
+            el.checked = val.includes(el.value);
+          } else {
+            el.checked = el.value == val;
+          }
+        } else if (el.tagName === "SELECT" || el.type === "text" || el.type === "number") {
+          el.value = val;
+          // İl/ilçe özel restore
+          if (el.id === "ilSelect") {
+            setTimeout(() => {
+              el.value = val;
+              el.dispatchEvent(new Event('change'));
+              // İlçe seçili ise ilçe de restore edilsin
+              if (obj["ilce"]) {
+                setTimeout(() => {
+                  const ilceSelect = document.getElementById('ilceSelect');
+                  ilceSelect.value = obj["ilce"];
+                }, 100);
+              }
+            }, 100);
+          }
+        }
+      });
+    });
+    // Mobil Hizmet kutucuklarını göster/gizle
+    if (document.getElementById('mobilEvet') && document.getElementById('mobilHayir')) {
+      const mobilEvet = document.getElementById('mobilEvet');
+      const mobilHayir = document.getElementById('mobilHayir');
+      const mobilEkBilgiGroup = document.getElementById('mobilEkBilgiGroup');
+      if (mobilEvet.checked) {
+        mobilEkBilgiGroup.style.display = 'flex';
+      } else {
+        mobilEkBilgiGroup.style.display = 'none';
+      }
+    }
+  }
 
   // Checkbox gruplarında sadece bir tanesi işaretlenebilsin
   function singleCheckboxGroup(name) {
@@ -496,11 +565,8 @@
     singleCheckboxGroup('sendika');
     singleCheckboxGroup('mobilHizmet');
     singleCheckboxGroup('sahu');
+    // Sayfa yüklendiğinde cookie'den formu doldur
+    restoreFormFromCookie();
   });
-
-  var newHeight = Math.max(contentHeight, minHeight);
-mainCard.style.height = newHeight + "px";
-iframe.style.height = newHeight + "px";
-  </script>
-</body>
-</html>
+</script>
+<!-- ...mevcut kodlar... -->
