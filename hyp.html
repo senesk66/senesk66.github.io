@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>A Değeri: HYP Katsayısı Hesabı</title>
+  <!-- Poppins fontu ekleniyor -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --header-bg: #99BBFF;
+      --row-separator: #b3d6ff;
+      --main-bg: #E3EDFF;
+    }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--main-bg);
+      text-align: center;
+      margin: 0;
+      min-height: 100vh;
+      font-size: 16px;
+      font-weight: 400;
+      color: #22223b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .table-container {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 10px auto 0 auto;
+      background: var(--main-bg);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .table-header-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-bottom: 4px;
+      width: 100%;
+    }
+    .table-header-row label {
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      color: #22223b;
+      font-weight: 400;
+      margin-right: 8px;
+    }
+    .table-header-row select {
+      width: 120px;
+      padding: 8px 10px;
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      border: 1.5px solid var(--row-separator);
+      border-radius: 10px;
+      background: #fff;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.02);
+    }
+    .table-header-row select:focus {
+      border-color: #388bff;
+      box-shadow: 0 0 0 2px #e3f2fd;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--main-bg);
+      border-radius: 10px;
+      box-shadow: none;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 1rem;
+      margin: 0;
+    }
+    th, td {
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 400;
+      background: none;
+      border-bottom: 1.5px solid var(--row-separator);
+      color: #22223b;
+    }
+    th.katsayi, td.katsayi {
+      width: 110px;
+      background-color: var(--header-bg);
+      font-weight: 500;
+      color: #22223b;
+      border-bottom: 1.5px solid var(--row-separator);
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    thead th.katsayi {
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0px;
+      border-top-right-radius: 10px;
+    }
+    tbody tr:last-child td.katsayi {
+      border-bottom-right-radius: 10px !important;
+      border-bottom-left-radius: 10px !important;
+    }
+    thead th {
+      background: var(--header-bg);
+      color: #22223b;
+      font-weight: 500;
+      font-size: 1rem;
+      border-bottom: 2.5px solid #388bff;
+      letter-spacing: 0.2px;
+      position: relative;
+    }
+    thead th:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    thead th:last-child {
+      border-top-right-radius: 10px;
+    }
+    tr:last-child td, tr:last-child th {
+      border-bottom: none;
+    }
+    table input[type="number"], table input[type="text"] {
+      width: 90px;
+      padding: 8px 10px;
+      border: 1.5px solid var(--row-separator);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      text-align: center;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.02);
+    }
+    table input[type="number"]:focus, table input[type="text"]:focus {
+      border-color: #388bff;
+      box-shadow: 0 0 0 2px #e3f2fd;
+    }
+    table input[type="number"]::-webkit-input-placeholder,
+    table input[type="text"]::-webkit-input-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    table input[type="number"]::-moz-placeholder,
+    table input[type="text"]::-moz-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    table input[type="number"]:-ms-input-placeholder,
+    table input[type="text"]:-ms-input-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    table input[type="number"]::placeholder,
+    table input[type="text"]::placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    table input[type="number"]::-webkit-outer-spin-button,
+    table input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    table input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    table input[type="number"] {
+      min: 0;
+      max: 999;
+    }
+    /* HYP kutusunu tablo kapsayıcısının sağ altına sabitle */
+    #hypDisplay {
+      position: absolute;
+      right: 0;
+      bottom: -60px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      padding: 10px;
+      border: 1.5px solid var(--row-separator);
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      font-family: 'Poppins', Arial, sans-serif;
+      color: #22223b;
+      min-width: 220px;
+      text-align: center;
+      z-index: 2;
+      box-sizing: border-box;
+      box-shadow: 0 2px 8px 0 rgba(52,152,219,0.08);
+    }
+    #modalFooter {
+      display: none;
+    }
+    @media (max-width: 1000px) {
+      .table-container, table, #modalFooter {
+        max-width: 98vw;
+        font-size: 0.95rem;
+      }
+      #hypDisplay {
+        min-width: 140px;
+        font-size: 1rem;
+        padding: 8px;
+        bottom: -48px;
+      }
+    }
+    @media (max-width: 700px) {
+      .table-container, table, #modalFooter {
+        font-size: 0.92rem;
+        padding: 6px 0;
+      }
+      .table-header-row label {
+        font-size: 0.95rem;
+      }
+      table input[type="number"], table input[type="text"] {
+        width: 60px;
+        font-size: 0.95rem;
+      }
+      #hypDisplay {
+        font-size: 0.95rem;
+        min-width: 100px;
+        padding: 6px;
+        bottom: -40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="table-container">
+    <div class="table-header-row">
+      <label for="surecYonetimi">Süreç Yönetimi:</label>
+      <select id="surecYonetimi" oninput="updateHYP()">
+        <option value="Başarısız">Başarısız</option>
+        <option value="Başarılı">Başarılı</option>
+      </select>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Tarama/İzlem</th>
+          <th>Aylık Gereken</th>
+          <th>Yapılan</th>
+          <th>Devreden</th>
+          <th>Gerçekleşme Oranı</th>
+          <th class="katsayi">Katsayı</th>
+        </tr>
+      </thead>
+      <tbody>
+        <script>
+          const rowLabels = [
+            "1. KVR İzlemi",
+            "2. Kolorektal Kolorektal Taraması",
+            "3. Obezite taraması",
+            "4. Hipertansiyon Taraması",
+            "5. Hipertansiyon İzlem",
+            "6. Diyabet İzlemi",
+            "7. Yaşlı Sağlığı İzlemi",
+            "8. Diyabet Taraması",
+            "9. KVR Taraması",
+            "10. Mamografi Taraması",
+            "11. Serviks Kanser Taraması",
+            "12. Obezite İzlemi"
+          ];
+          let bodyHTML = "";
+          for (let i = 0; i < rowLabels.length; i++){
+            let rowIndex = i + 1;
+            let katsayiClass = "katsayi";
+            if(i === rowLabels.length - 1) katsayiClass += " katsayi-bottom-radius";
+            bodyHTML += `<tr><th>${rowLabels[i]}</th>`;
+            bodyHTML += `<td><input type="number" id="cell-aylikGereken-${rowIndex}" placeholder="0" min="0" max="999" oninput="updateHYP()"></td>`;
+            bodyHTML += `<td><input type="number" id="cell-yapilan-${rowIndex}" placeholder="0" min="0" max="999" oninput="updateHYP()"></td>`;
+            bodyHTML += `<td><input type="number" id="cell-devreden-${rowIndex}" placeholder="0" min="0" max="999" oninput="updateHYP()"></td>`;
+            bodyHTML += `<td><input type="text" id="cell-gercekOrani-${rowIndex}" placeholder="0%" readonly></td>`;
+            bodyHTML += `<td class="${katsayiClass}"><input type="text" id="cell-faktor-${rowIndex}" placeholder="--" readonly></td>`;
+            bodyHTML += `</tr>`;
+          }
+          document.write(bodyHTML);
+        </script>
+      </tbody>
+    </table>
+    <div id="hypDisplay">HYP Katsayısı: -</div>
+  </div>
+  <style>
+    td.katsayi.katsayi-bottom-radius {
+      border-bottom-right-radius: 10px !important;
+      border-bottom-left-radius: 10px !important;
+    }
+  </style>
+  <script>
+    function linearFactor(ratio, lower, upper, lowerFactor, upperFactor) {
+      if(ratio < lower) return lowerFactor;
+      if(ratio >= upper) return upperFactor;
+      if(Math.abs(ratio - lower) < 0.001) return 1;
+      return 1 + ((ratio - lower) / (upper - lower)) * (upperFactor - 1);
+    }
+    function getRatio(row) {
+      let ag = parseFloat(document.getElementById(`cell-aylikGereken-${row}`).value) || 0;
+      let yap = parseFloat(document.getElementById(`cell-yapilan-${row}`).value) || 0;
+      let dev = parseFloat(document.getElementById(`cell-devreden-${row}`).value) || 0;
+      if(ag > 0) {
+        let base = (yap/ag)*100;
+        return (base < 10) ? base : ((yap+dev)/ag)*100;
+      }
+      return 0;
+    }
+    function updateHYP() {
+      for(let row = 1; row <= 12; row++) {
+        let ratio = getRatio(row);
+        const ratioInput = document.getElementById(`cell-gercekOrani-${row}`);
+        ratioInput.value = ratio.toFixed(2) + "%";
+        if(ratio < 40) ratioInput.style.backgroundColor = "red";
+        else if(ratio < 70) ratioInput.style.backgroundColor = "orange";
+        else if(ratio < 90) ratioInput.style.backgroundColor = "lightgreen";
+        else ratioInput.style.backgroundColor = "darkgreen";
+        let factorInput = document.getElementById(`cell-faktor-${row}`);
+        let factorVal = "";
+        if([1,2,3,4,5,6,7,8,9,10,11,12].indexOf(row) !== -1) {
+          let f = 1;
+          if(row === 1) {
+            if(ratio < 50) f = 0.98871;
+            else if(ratio >= 90) f = 1.0249;
+            else f = linearFactor(ratio,50,90,0.98871,1.0249);
+          }
+          else if(row === 2) {
+            if(ratio < 50) f = 0.994;
+            else if(ratio >= 90) f = 1.03;
+            else f = linearFactor(ratio,50,90,0.994,1.03);
+          }
+          else if(row === 3) {
+            if(ratio < 40) f = 0.994;
+            else if(ratio >= 90) f = 1.017;
+            else f = linearFactor(ratio,40,90,0.994,1.017);
+          }
+          else if(row === 4) {
+            if(ratio < 40) f = 0.994;
+            else if(ratio >= 90) f = 1.05;
+            else f = linearFactor(ratio,40,90,0.994,1.05);
+          }
+          else if(row === 5) {
+            if(ratio < 50) f = 0.98871;
+            else if(ratio >= 90) f = 1.0249;
+            else f = linearFactor(ratio,50,90,0.98871,1.0249);
+          }
+          else if(row === 6) {
+            if(ratio < 50) f = 0.98871;
+            else if(ratio >= 90) f = 1.0249;
+            else f = linearFactor(ratio,50,90,0.98871,1.0249);
+          }
+          else if(row === 7) {
+            if(ratio < 50) f = 0.98871;
+            else if(ratio >= 90) f = 1.0249;
+            else f = linearFactor(ratio,50,90,0.98871,1.0249);
+          }
+          else if(row === 8) {
+            if(ratio < 40) f = 0.994;
+            else if(ratio >= 90) f = 1.05;
+            else f = linearFactor(ratio,40,90,0.994,1.05);
+          }
+          else if(row === 9) {
+            if(ratio < 40) f = 0.994;
+            else if(ratio >= 90) f = 1.05;
+            else f = linearFactor(ratio,40,90,0.994,1.05);
+          }
+          else if(row === 10) {
+            if(ratio < 40) f = 0.994;
+            else if(ratio >= 90) f = 1.031;
+            else f = linearFactor(ratio,40,90,0.994,1.031);
+          }
+          else if(row === 11) {
+            if(ratio < 50) f = 0.994;
+            else if(ratio >= 90) f = 1.03;
+            else f = linearFactor(ratio,50,90,0.994,1.03);
+          }
+          else if(row === 12) {
+            if(ratio < 50) f = 0.98871;
+            else if(ratio >= 90) f = 1.0249;
+            else f = linearFactor(ratio,50,90,0.98871,1.0249);
+          }
+          factorVal = parseFloat(f.toPrecision(5));
+        }
+        factorInput.value = factorVal === "" ? "" : factorVal;
+      }
+      const surecY = document.getElementById("surecYonetimi").value;
+      const hypDisplay = document.getElementById("hypDisplay");
+      let usedRows = [1,2,3,4,5,6,7,8,9,10,11,12];
+      let product = 1;
+      for(let r of usedRows) {
+        let fVal = parseFloat(document.getElementById(`cell-faktor-${r}`).value);
+        if(!isNaN(fVal)) product *= fVal;
+      }
+      let oFactor = (surecY === "Başarılı") ? 1.03 : 0.994;
+      product *= oFactor;
+      let finalP = product;
+      finalP = parseFloat(finalP.toPrecision(6));
+      hypDisplay.innerText = "HYP Katsayısı: " + finalP;
+      hypDisplay.style.backgroundColor = "#f0f0f0";
+    }
+  </script>
+</body>
+</html>

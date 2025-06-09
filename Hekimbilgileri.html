@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Hekim Bilgileri Formu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #E3EDFF;
+    font-family: 'Poppins', Arial, sans-serif;
+    font-weight: 500;
+    color: #3A3A3C;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start; /* Ortalamayı kaldırdık */
+    justify-content: center;
+  }
+
+  .main-card {
+    position: relative;
+    min-height: 0px; /* <-- BUNU kaldırın veya örn. 0px yapın */
+    overflow: visible !important;
+    display: flex;
+    align-items: flex-start; /* Ortalamayı kaldırdık */
+    justify-content: center;
+    width: 100%;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+  }
+
+  /* Formu main-card içinde ortalamak için absolute pozisyonu kaldırın */
+  .form-grid {
+    /* position: absolute;  <-- BUNU KALDIRIN */
+    top: unset;
+    left: unset;
+    transform: none;
+    width: 900px;
+    background: transparent;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px 32px;
+    align-items: start;
+    box-sizing: border-box;
+    margin: 45px auto 0 auto; /* Üstten boşluk için */
+  }
+    .form-label {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: #222;
+      display: block;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .form-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .form-input, .form-select {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1.5px solid #b3d6ff;
+      background: #fff;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: #3A3A3C;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .form-input:focus, .form-select:focus {
+      border-color: #388bff;
+    }
+    .form-checkbox-group, .form-radio-group {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      margin-top: 2px;
+    }
+    .form-checkbox, .form-radio {
+      accent-color: #388bff;
+      width: 18px;
+      height: 18px;
+      margin-right: 6px;
+    }
+    input[type="checkbox"].form-checkbox {
+      border-radius: 10px;
+      accent-color: #388bff;
+      width: 18px;
+      height: 18px;
+    }
+    .form-checkbox-label, .form-radio-label {
+      font-size: 15px;
+      font-weight: 400;
+      color: #3A3A3C;
+      cursor: pointer;
+      margin-right: 18px;
+      user-select: none;
+    }
+    @media (max-width: 1000px) {
+      .form-grid {
+        width: 98vw;
+        min-width: 0;
+        grid-template-columns: 1fr;
+        gap: 18px 0;
+      }
+    }
+    .mobil-ek-bilgi-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 120px;
+      margin-top: 0;
+    }
+    .mobil-ek-bilgi-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    #mobilEkBilgi {
+      position: static; /* Artık absolute değil! */
+      margin-left: 0;
+      padding-left: 0;
+      width: 100%;
+      max-width: none;
+      background: transparent;
+    }
+
+    #mobilEkBilgi .mobil-ek-bilgi-row {
+      justify-content: flex-start;
+      gap: 24px;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 0;
+      padding-left: 0;
+    }
+
+    #mobilEkBilgi .mobil-ek-bilgi-item:first-child {
+      margin-left: 0;
+      min-width: 0;
+      /* .form-label'ın sol boşluğunu yakalamak için */
+      padding-left: 0;
+    }
+
+    #mobilHizmetGroup {
+      margin-bottom: 0;
+    }
+
+    @media (min-width: 600px) {
+      #mobilEkBilgi {
+        padding-left: 8px; /* Gerekirse ayarlayın */
+      }
+    }
+
+    /* main-card'a relative pozisyon eklenmeli */
+    .main-card {
+      position: relative;
+    }
+
+    /* Select kutularında özel ok ikonu ve konumlandırma */
+    .form-select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: #fff url('data:image/svg+xml;utf8,<svg fill="black" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat;
+      background-position: right 10px center; /* Ok kutunun bitişinden 10px içeride */
+      background-size: 18px 18px;
+      padding-right: 40px; /* Ok ile metin çakışmasın diye */
+    }
+
+    .form-input:hover,
+    .form-select:hover,
+    input[type="checkbox"]:hover,
+    input[type="radio"]:hover {
+      outline: 1.5px solid #2563eb;
+      outline-offset: 0;
+      border-radius: 10px;
+    }
+
+    /* Select dropdown'ın scrollbar rengi (Webkit tabanlı tarayıcılar için) */
+.form-select,
+.form-select option,
+.form-select optgroup {
+  scrollbar-width: thin;
+  scrollbar-color: #8bb6f9 #f5f7fa; /* Firefox */
+}
+.form-select::-webkit-scrollbar,
+.form-select option::-webkit-scrollbar,
+.form-select optgroup::-webkit-scrollbar {
+  width: 8px;
+  background: #f5f7fa;
+}
+.form-select::-webkit-scrollbar-thumb,
+.form-select option::-webkit-scrollbar-thumb,
+.form-select optgroup::-webkit-scrollbar-thumb {
+  background: #8bb6f9;
+  border-radius: 8px;
+}
+  </style>
+</head>
+<body>
+  <div class="main-card">
+    <form class="form-grid" id="userForm" autocomplete="off">
+      <!-- 1. Ünvan -->
+      <div class="form-group">
+        <label class="form-label" for="unvan">Ünvan</label>
+        <select class="form-select" id="unvan" name="unvan" required>
+          <option value="">Ünvan seçiniz</option>
+          <option value="Tabip/Uzm Tabip">Tabip/Uzm Tabip</option>
+          <option value="Aile Hekimliği Uzmanı">Aile Hekimliği Uzmanı</option>
+        </select>
+      </div>
+      <!-- 2. Kadro -->
+      <div class="form-group">
+        <label class="form-label">Kadro</label>
+        <div class="form-checkbox-group">
+          <label class="form-checkbox-label">
+            <input type="checkbox" class="form-checkbox" name="kadro" value="Kamu Çalışanı"> Kamu Çalışanı
+          </label>
+          <label class="form-checkbox-label">
+            <input type="checkbox" class="form-checkbox" name="kadro" value="Kamu Dışı Çalışan"> Kamu Dışı Çalışan
+          </label>
+        </div>
+      </div>
+      <!-- 3. Başlayış Tarihi -->
+      <div class="form-group">
+        <label class="form-label">Başlayış tarihi</label>
+        <div class="form-row">
+          <select class="form-select" id="baslangicYil" name="baslangicYil" required>
+            <option value="">Yıl</option>
+            <!-- JS ile doldurulacak -->
+          </select>
+          <select class="form-select" name="baslangicAy" required>
+            <option value="">Ay</option>
+            <option value="Ocak">Ocak</option>
+            <option value="Şubat">Şubat</option>
+            <option value="Mart">Mart</option>
+            <option value="Nisan">Nisan</option>
+            <option value="Mayıs">Mayıs</option>
+            <option value="Haziran">Haziran</option>
+            <option value="Temmuz">Temmuz</option>
+            <option value="Ağustos">Ağustos</option>
+            <option value="Eylül">Eylül</option>
+            <option value="Ekim">Ekim</option>
+            <option value="Kasım">Kasım</option>
+            <option value="Aralık">Aralık</option>
+          </select>
+        </div>
+      </div>
+      <!-- 4. İl/İlçe -->
+      <div class="form-group">
+        <label class="form-label">İl/İlçe</label>
+        <div class="form-row">
+          <select class="form-select" id="ilSelect" name="il" required>
+            <option value="">İl Seçiniz</option>
+          </select>
+          <select class="form-select" id="ilceSelect" name="ilce" required disabled>
+            <option value="">İlçe Seçiniz</option>
+          </select>
+        </div>
+      </div>
+      <!-- 5. Aile hekimliği grubu/Nüfus Tipi -->
+      <div class="form-group">
+        <label class="form-label">Aile hekimliği grubu/Nüfus Tipi</label>
+        <div class="form-row">
+          <select class="form-select" name="aileHekimligiGrubu" required>
+            <option value="">Grup Seçiniz</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+            <option value="Grupsuz">Grupsuz</option>
+          </select>
+          <select class="form-select" name="nufusTipi" required>
+            <option value="">Nüfus Tipi Seçiniz</option>
+            <option value="Normal Nüfus">Normal Nüfus</option>
+            <option value="Sıfır Nüfus">Sıfır Nüfus</option>
+            <option value="Zorunlu Düşük Nüfus">Zorunlu Düşük Nüfus</option>
+            <option value="Entegre Nüfus">Entegre Nüfus</option>
+          </select>
+        </div>
+      </div>
+      <!-- 6. Sendika Üyeliği -->
+      <div class="form-group">
+        <label class="form-label">Sendika üyeliği</label>
+        <div class="form-checkbox-group">
+          <label class="form-checkbox-label">
+            <input type="checkbox" class="form-checkbox" name="sendika" value="Sendika Üyesiyim"> Sendika Üyesiyim
+          </label>
+          <label class="form-checkbox-label">
+            <input type="checkbox" class="form-checkbox" name="sendika" value="Sendika Üyesi Değilim"> Sendika Üyesi Değilim
+          </label>
+        </div>
+      </div>
+      <!-- 7. Mobil Hizmet -->
+      <div class="form-group" id="mobilHizmetGroup">
+        <label class="form-label">Mobil Hizmet</label>
+        <div class="form-checkbox-group">
+          <label class="form-checkbox-label">
+            <input type="checkbox" class="form-checkbox" name="mobilHizmet" value="Evet" id="mobilEvet"> Evet
+          </label>
+          <label class="form-checkbox-label">
+            <input type="checkbox" class="form-checkbox" name="mobilHizmet" value="Hayır" id="mobilHayir"> Hayır
+          </label>
+        </div>
+        <!-- Mobil Ek Bilgi: Mobil Hizmet'in hemen altında açılır -->
+        <div class="form-group" id="mobilEkBilgiGroup" style="display:none; margin-top:18px;">
+          <div class="mobil-ek-bilgi-row">
+            <div class="mobil-ek-bilgi-item">
+              <label for="mobilNufus" class="form-label">Mobil Nüfus :</label>
+              <input
+                type="number"
+                min="0"
+                max="9999"
+                maxlength="4"
+                class="form-input"
+                id="mobilNufus"
+                name="mobilNufus"
+                placeholder=""
+                style="width:60px; font-size:15px; font-family:'Poppins', Arial, sans-serif;"
+                oninput="if(this.value.length>4)this.value=this.value.slice(0,4);if(this.value<0)this.value=0;"
+              >
+            </div>
+            <div class="mobil-ek-bilgi-item">
+              <label for="mobilKm" class="form-label">Mobil km :</label>
+              <input
+                type="number"
+                min="0"
+                max="9999"
+                maxlength="4"
+                class="form-input"
+                id="mobilKm"
+                name="mobilKm"
+                placeholder=""
+                style="width:60px; font-size:15px; font-family:'Poppins', Arial, sans-serif;"
+                oninput="if(this.value.length>4)this.value=this.value.slice(0,4);if(this.value<0)this.value=0;"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ...mevcut kodlar... -->
+    </form>
+  </div>
+  <style>
+    /* Mobil Ek Bilgi grubu da diğer form-group'lar gibi başlasın */
+    #mobilEkBilgiGroup {
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-left: 0;
+    }
+    #mobilEkBilgiGroup .mobil-ek-bilgi-row {
+      justify-content: flex-start;
+      gap: 24px;
+      margin-left: 0;
+      margin-right: 0;
+      margin-top: 0;
+      padding-left: 0;
+    }
+    #mobilEkBilgiGroup .mobil-ek-bilgi-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  </style>
+  <script>
+  // Yıl seçeneklerini doldur
+  const yilSelect = document.getElementById('baslangicYil');
+  for(let y = 2025; y >= 1955; y--) {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    yilSelect.appendChild(opt);
+  }
+
+  // İl/ilçe doldurma
+  let turkiyeData = [];
+  fetch('turkiyeData.json')
+    .then(res => res.json())
+    .then(data => {
+      turkiyeData = data;
+      const ilSelect = document.getElementById('ilSelect');
+      // Tekrarsız il listesi oluştur
+      const ilSet = new Set();
+      data.forEach(item => {
+        ilSet.add(item.il.trim());
+      });
+      ilSet.forEach(il => {
+        const opt = document.createElement('option');
+        opt.value = il;
+        opt.textContent = il;
+        ilSelect.appendChild(opt);
+      });
+    });
+
+  document.getElementById('ilSelect').addEventListener('change', function() {
+    const ilceSelect = document.getElementById('ilceSelect');
+    ilceSelect.innerHTML = '<option value="">İlçe Seçiniz</option>';
+    ilceSelect.disabled = true;
+    const selectedIl = this.value;
+    if (!selectedIl) return;
+    // Seçilen ile ait ilçeleri bul
+    const ilceler = turkiyeData
+      .filter(item => item.il.trim() === selectedIl)
+      .map(item => item.ilce);
+    // Tekrarsız ilce listesi
+    const ilceSet = new Set(ilceler);
+    ilceSet.forEach(ilce => {
+      const opt = document.createElement('option');
+      opt.value = ilce;
+      opt.textContent = ilce;
+      ilceSelect.appendChild(opt);
+    });
+    if (ilceSet.size > 0) ilceSelect.disabled = false;
+  });
+
+  // Form submit ve cookie kaydetme
+  document.getElementById('userForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const obj = {};
+    for (let [key, value] of formData.entries()) {
+      // Aynı isimli checkbox'lar için dizi olarak kaydet
+      if (obj[key]) {
+        if (Array.isArray(obj[key])) obj[key].push(value);
+        else obj[key] = [obj[key], value];
+      } else {
+        obj[key] = value;
+      }
+    }
+    document.cookie = "hekimForm=" + encodeURIComponent(JSON.stringify(obj)) + ";path=/;max-age=31536000";
+    alert("Bilgiler kaydedildi!");
+  });
+
+  // Checkbox gruplarında sadece bir tanesi işaretlenebilsin
+  function singleCheckboxGroup(name) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"][name="' + name + '"]');
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', function() {
+        if (this.checked) {
+          checkboxes.forEach(other => {
+            if (other !== this) other.checked = false;
+          });
+        }
+      });
+    });
+  }
+
+  // Mobil Hizmet kutucuklarını göster/gizle
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobilEvet = document.getElementById('mobilEvet');
+    const mobilHayir = document.getElementById('mobilHayir');
+    const mobilEkBilgiGroup = document.getElementById('mobilEkBilgiGroup');
+    const mobilNufus = document.getElementById('mobilNufus');
+    const mobilKm = document.getElementById('mobilKm');
+
+    function toggleMobilKutucuk() {
+      if (mobilEvet.checked) {
+        mobilEkBilgiGroup.style.display = 'flex';
+        if (window.parent && window.parent.resizeMainCardToIframe) {
+          setTimeout(() => window.parent.resizeMainCardToIframe(), 100);
+        }
+      } else {
+        mobilEkBilgiGroup.style.display = 'none';
+        mobilNufus.value = '';
+        mobilKm.value = '';
+        if (window.parent && window.parent.resizeMainCardToIframe) {
+          setTimeout(() => window.parent.resizeMainCardToIframe(), 100);
+        }
+      }
+    }
+
+    mobilEvet.addEventListener('change', function() {
+      if (this.checked) {
+        mobilHayir.checked = false;
+      }
+      toggleMobilKutucuk();
+    });
+    mobilHayir.addEventListener('change', function() {
+      if (this.checked) {
+        mobilEvet.checked = false;
+      }
+      toggleMobilKutucuk();
+    });
+
+    // Diğer checkbox grupları
+    singleCheckboxGroup('kadro');
+    singleCheckboxGroup('sendika');
+    singleCheckboxGroup('mobilHizmet');
+    singleCheckboxGroup('sahu');
+  });
+
+  var newHeight = Math.max(contentHeight, minHeight);
+mainCard.style.height = newHeight + "px";
+iframe.style.height = newHeight + "px";
+  </script>
+</body>
+</html>

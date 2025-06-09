@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kısa Sonuç Göster - Tasarım</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Mulish:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #E3EDFF;
+      width: 1041px;
+      height: 1000px;
+      min-height: 100vh;
+      font-family: 'Mulish', Arial, sans-serif;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .container {
+      width: 100%;
+      max-width: 1041px;
+      margin: 0 auto;
+      padding-top: 60px;
+    }
+    /* Kısa Sonuç ve Uyarı satırı */
+    .short-result-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      gap: 0.5rem; /* Mesafe daha da azaltıldı */
+    }
+    .short-result-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #FFFFFF;
+      color: #3377FF;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      border-radius: 12px;
+      width: 300px;
+      height: 64px;
+      box-shadow: 0 2px 8px rgba(51,119,255,0.08);
+      cursor: pointer;
+      border: 2px solid #3377FF;
+      letter-spacing: 0.5px;
+      transition: background 0.2s, color 0.2s;
+      margin-left: 90px;
+    }
+    .short-result-btn:hover {
+      background: #3377FF;
+      color: #fff;
+    }
+    .short-result-warning {
+      background:#FFFFFF;
+      color: #3377FF;
+      border: 1.5px solid #3377FF;
+      border-radius: 10px;
+      padding: 12px 24px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      text-align: right;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      min-width: 340px;
+      line-height: 1.4;
+      margin-right: 130px; /* EKLENDİ */
+    }
+    .divider {
+      width: 50%;
+      height: 4px;
+      background: #3377FF;
+      border-radius: 2px;
+      margin: 0 auto 32px auto;
+      display: block;
+    }
+    .pdf-detail-row {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px rgba(51,119,255,0.10);
+      padding: 32px 40px;
+      max-width: 700px;
+      margin: 0 auto;
+      gap: 24px;
+    }
+    .pdf-icon {
+      width: 56px;
+      height: 56px;
+      background: #F5F8FF;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+    }
+    .pdf-icon img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+    .pdf-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-right: 24px;
+    }
+    .pdf-title {
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: #222;
+      margin-bottom: 8px;
+    }
+    .pdf-file-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pdf-filename {
+      font-family: 'Mulish', Arial, sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      color: #222;
+      margin-right: 8px;
+    }
+    .pdf-progress {
+      background: #3377FF;
+      color: #fff;
+      font-family: 'Mulish', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 8px;
+      padding: 2px 14px;
+      display: inline-block;
+      min-width: 38px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .pdf-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+    }
+    .action-btn {
+      background: #F5F8FF;
+      color: #3377FF;
+      font-family: 'Mulish', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 24px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: 0 1px 4px rgba(51,119,255,0.06);
+    }
+    .action-btn:hover {
+      background: #3377FF;
+      color: #fff;
+    }
+    @media (max-width: 800px) {
+      .container, .pdf-detail-row {
+        max-width: 98vw;
+        padding: 16px;
+      }
+      .pdf-detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+      .pdf-actions {
+        margin-left: 0;
+      }
+      .short-result-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+      }
+      .short-result-warning {
+        min-width: 0;
+        font-size: 16px;
+        padding: 10px 12px;
+        align-items: flex-start;
+        margin-right: 0; /* Mobilde margin kaldırıldı */
+      }
+      .short-result-btn {
+        width: 100%;
+        font-size: 18px;
+        height: 54px;
+      }
+      .divider {
+        width: 80vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="short-result-row">
+      <button class="short-result-btn">Kısa Sonuç Göster</button>
+      <div class="short-result-warning">
+        Sonuçlar tahmini olarak hesaplanmaktadır.<br>
+        <b>Gerçek maaşınızı göstermez!</b>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="pdf-detail-row">
+      <div class="pdf-icon">
+        <img src="pdf.png" alt="PDF">
+      </div>
+      <div class="pdf-info">
+        <div class="pdf-title">Detaylı sonucu PDF olarak gör</div>
+        <div class="pdf-file-row">
+          <span class="pdf-filename">sonuc.pdf</span>
+          <span class="pdf-progress">100%</span>
+        </div>
+      </div>
+      <div class="pdf-actions">
+        <button class="action-btn">Önizle</button>
+        <button class="action-btn">Kaydet</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

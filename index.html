@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>HYPHESAP.net</title>
+  <meta name="viewport" content="width=1040">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --blue: #388bff;
+      --blue-dark: #2176ff;
+      --blue-light: #eaf3ff;
+      --blue-step: #e3f0ff;
+      --gray: #fff;
+      --gray-dark: #bfc8d6;
+      --text: #3A3A3C;
+      --footer-link: #388bff;
+      --footer-bg: #E3EDFF;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 500;
+      color: var(--text);
+      min-width: 1040px;
+      font-size: 14px;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .header-bar, .header-content, .logo-line-row, .breadcrumb {
+      width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .header-content {
+      padding-top: 32px;
+      display: flex;
+      flex-direction: column;
+    }
+    .logo-line-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .site-logo {
+      height: 56px;
+      margin-right: 18px;
+      display: block;
+    }
+    .header-line {
+      flex: 1;
+      height: 4px;
+      background: #2176ff;
+      border-radius: 2px;
+      min-width: 0;
+    }
+    .breadcrumb {
+      font-size: 14px;
+      color: #3A3A3C;
+      letter-spacing: 0.1px;
+      margin-bottom: 8px;
+    }
+    .nav-box {
+      width: 1040px;
+      max-width: 1040px;
+      margin: 11px auto;
+      background: #fff;
+      border: 1.5px solid #b3d6ff;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      box-shadow: 0 2px 8px rgba(56,139,255,0.04);
+      padding: 0;
+    }
+    .nav-tabs {
+      display: flex;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      justify-content: space-between;
+      width: 100%;
+      border: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-tab {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 70px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--blue);
+      background: #eaf3ff;
+      border: none;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 1.5px solid #b3d6ff;
+      transition: background 0.2s, color 0.2s;
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-tab:last-child { border-right: none; border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+    .nav-tab:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+    .nav-tab.active { background: var(--blue); color: #fff; }
+    .nav-tab:not(.active) { background: #99BBFF; color: #fff; }
+    .nav-tab:hover {
+      outline: 3px solid #3377FF;
+      outline-offset: -3px;
+      z-index: 2;
+    }
+    /* Stepper */
+    .custom-stepper-step { display: flex; align-items: center; position: relative; }
+    .custom-stepper-circle {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #fff; border: 2.5px solid #99BBFF;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2; box-shadow: 0 2px 8px rgba(56,139,255,0.08);
+      transition: background 0.2s, color 0.2s, border 0.2s;
+    }
+    .custom-stepper-step.active .custom-stepper-circle { background: #3377FF !important; }
+    .custom-stepper-fraction { display: flex; align-items: flex-end; }
+    .custom-stepper-number, .custom-stepper-slash, .custom-stepper-denominator {
+      font-family: 'Poppins', Arial, sans-serif !important; font-weight: 400 !important;
+    }
+    .custom-stepper-number { font-size: 33px; color: var(--blue); line-height: 1; letter-spacing: 0.5px; }
+    .custom-stepper-step.active .custom-stepper-number,
+    .custom-stepper-step.active .custom-stepper-slash,
+    .custom-stepper-step.active .custom-stepper-denominator { color: #fff !important; }
+    .custom-stepper-slash, .custom-stepper-denominator {
+      font-size: 16px; margin: 0 2px 4px 2px; color: var(--blue);
+    }
+    .custom-stepper-step.active .custom-stepper-slash,
+    .custom-stepper-step.active .custom-stepper-denominator { color: #fff; }
+    .custom-stepper-denominator { margin-bottom: 2px; }
+    .custom-stepper-step:not(.active) .custom-stepper-number,
+    .custom-stepper-step:not(.active) .custom-stepper-slash,
+    .custom-stepper-step:not(.active) .custom-stepper-denominator { color: #3A3A3C !important; }
+    .custom-stepper-divider { width: 32px; height: 3px; background: #99BBFF; border-radius: 2px; }
+    .main-card {
+      width: 1040px; max-width: 1040px; min-height: 200px;
+      margin: 0 auto 25px auto;
+      background: #E3EDFF; border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      box-shadow: 0 2px 16px rgba(56,139,255,0.07);
+      border: 1.5px solid #b3d6ff;
+      position: relative; z-index: 1;
+      overflow: visible !important;
+      transition: box-shadow 0.5s cubic-bezier(.4,1.4,.6,1);
+    }
+    .form-actions {
+      position: absolute; right: 45px; bottom: 35px;
+      width: auto; margin-top: 0; display: flex; justify-content: flex-end; z-index: 10;
+    }
+    @media (max-width: 1000px) {
+      .main-card, .nav-box, .header-content { width: 99vw; max-width: 99vw; }
+      .form-actions { position: static; right: unset; bottom: unset; justify-content: center; margin-top: 32px; }
+    }
+    .hesapla-btn {
+      margin-top: 60px; background: var(--blue); color: #fff;
+      font-family: 'Poppins', Arial, sans-serif; font-size: 14px; font-weight: 500;
+      border: none; border-radius: 24px; padding: 14px 60px; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(56,139,255,0.13);
+      display: flex; align-items: center; gap: 10px;
+      transition: background 0.2s, box-shadow 0.2s; letter-spacing: 0.1px;
+    }
+    .hesapla-btn:hover { background: #2566c8; box-shadow: 0 6px 32px rgba(56,139,255,0.18); }
+    .hesapla-btn svg { margin-left: 8px; margin-bottom: 1px; }
+    .footer {
+      width: 100%; background: var(--footer-bg); margin-top: 0;
+      border-top: 1.5px solid #dbeafe;
+    }
+    .footer-content {
+      max-width: 1040px; margin: 0 auto; display: flex; justify-content: space-between;
+      align-items: flex-start; padding: 32px 0 24px 0; font-size: 14px; color: #3A3A3C;
+      font-family: 'Poppins', Arial, sans-serif; box-sizing: border-box; width: 100%;
+    }
+    .footer-col { flex: 1; min-width: 180px; padding: 0 16px; box-sizing: border-box; color: #3A3A3C; }
+    .footer-title { color: var(--footer-link); font-size: 14px; font-weight: 500; margin-bottom: 8px; letter-spacing: 0.1px; }
+    .footer-link { color: #3A3A3C; text-decoration: none; font-size: 14px; display: block; margin-bottom: 2px; }
+    .footer-link:hover { text-decoration: underline; }
+    .footer-col.center span { color: #3A3A3C !important; }
+    @media (max-width: 1100px) {
+      .header-content, .main-card, .nav-box, .footer-content { max-width: 98vw; width: 98vw; }
+    }
+    @media (max-width: 900px) {
+      .main-card, .nav-box, .header-content { width: 99vw; max-width: 99vw; }
+      .footer-content { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+      .footer-col { padding: 0; min-width: 0; }
+    }
+    .page-content { flex: 1; display: flex; flex-direction: column; }
+    #hekimIframeContainer { overflow: visible !important; }
+    #hekimIframe { overflow: hidden !important; display: block; }
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      width: 100%; max-width: 1040px; margin: 0 auto; padding: 24px; box-sizing: border-box;
+    }
+    .form-grid > div { display: flex; flex-direction: column; gap: 8px; }
+    .form-actions { grid-column: 1 / -1; display: flex; justify-content: flex-end; margin-top: 16px; }
+    .submit-btn {
+      background: var(--blue); color: #fff; font-family: 'Poppins', Arial, sans-serif;
+      font-size: 14px; font-weight: 500; border: none; border-radius: 24px;
+      padding: 12px 24px; cursor: pointer; transition: background 0.2s, transform 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .submit-btn:hover { background: #2566c8; transform: translateY(-2px); }
+    .main-card, #hekimIframe, .form-grid, #hekimIframeContainer { transition: none !important; animation: none !important; }
+    .stepper-actions-wrapper { width: 100%; display: flex; justify-content: center; align-items: flex-end; margin-bottom: 25px !important; position: relative; pointer-events: none; }
+    .stepper-wrapper { display: flex; justify-content: center; align-items: center; background: none; box-shadow: none; border: none; padding: 0; margin: 0; position: relative; z-index: 1; pointer-events: auto; }
+    #stepperSubmitBtn {
+      position: absolute; right: -260px; bottom: 35px; margin: 0 !important; z-index: 100;
+      box-shadow: 0 4px 24px rgba(56,139,255,0.13);
+    }
+    @media (max-width: 900px) {
+      #stepperSubmitBtn { position: static; width: 100%; max-width: 320px; margin-top: 16px !important; right: unset; bottom: unset; left: unset; }
+      .stepper-actions-wrapper { flex-direction: column; align-items: center; }
+    }
+    @media (max-width: 1100px) {
+      .stepper-actions-wrapper { width: 99vw; }
+      .stepper-wrapper { width: 99vw; max-width: 99vw; }
+    }
+    .page-content { flex: 1; display: flex; flex-direction: column; }
+  </style>
+  <script>
+    // Github Pages yönlendirmesi (senesk66.github.io için)
+    (function() {
+      // Eğer sayfa localde değilse ve github pages'te değilse yönlendir
+      var ghPagesUrl = "https://senesk66.github.io/";
+      if (
+        location.hostname !== "localhost" &&
+        location.hostname !== "127.0.0.1" &&
+        location.hostname !== "senesk66.github.io"
+      ) {
+        location.replace(ghPagesUrl);
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div class="page-content">
+    <div class="header-bar">
+      <div class="header-content">
+        <div class="logo-line-row">
+          <img src="logo.png" alt="HYPHESAP.net" class="site-logo">
+          <div class="header-line"></div>
+        </div>
+        <div class="breadcrumb">Anasayfa &gt;</div>
+      </div>
+    </div>
+    <div class="nav-box">
+      <div class="nav-tabs">
+        <button class="nav-tab" id="hekimTab" onclick="hekimTabClick()">Hekim bilgileri</button>
+        <button class="nav-tab" id="nufusTab" onclick="openNufus()">Nüfus Katsayısı</button>
+        <button class="nav-tab" id="hypTab" onclick="openHyp()">HYP Katsayısı</button>
+        <button class="nav-tab" id="asiTab" onclick="openAsi()">Negatif Performans</button>
+        <button class="nav-tab" id="pperfTab" onclick="openPPerformans()">Pozitif Performans</button>
+        <button class="nav-tab" id="sonucTab" onclick="showMainContent()">Sonuç</button>
+      </div>
+    </div>
+    <div style="height:8px"></div>
+    <div class="main-card" id="mainCard">
+      <button class="hesapla-btn" id="hesaplaBtn" onclick="openHekimBilgileri()">
+        Hesapla
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M7 11H15M15 11L12 8M15 11L12 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div id="hekimIframeContainer" style="display:none; width:100%; margin-top:0;">
+        <iframe id="hekimIframe"
+          src=""
+          style="width:100%;border:none;border-radius:10px;background:#E3EDFF;transition:height 0.5s cubic-bezier(.4,1.4,.6,1);display:block;"
+          onload="resizeMainCardToIframe()">
+        </iframe>
+      </div>
+    </div>
+    <div class="stepper-actions-wrapper">
+      <div class="stepper-wrapper">
+        <div style="display:flex;align-items:center;justify-content:center;">
+          <div class="custom-stepper-step" id="stepper1">
+            <div class="custom-stepper-circle">
+              <span class="custom-stepper-fraction">
+                <span class="custom-stepper-number">1</span>
+                <span class="custom-stepper-slash">/</span>
+                <span class="custom-stepper-denominator">5</span>
+              </span>
+            </div>
+          </div>
+          <div class="custom-stepper-divider"></div>
+          <div class="custom-stepper-step" id="stepper2">
+            <div class="custom-stepper-circle">
+              <span class="custom-stepper-fraction">
+                <span class="custom-stepper-number">2</span>
+                <span class="custom-stepper-slash">/</span>
+                <span class="custom-stepper-denominator">5</span>
+              </span>
+            </div>
+          </div>
+          <div class="custom-stepper-divider"></div>
+          <div class="custom-stepper-step" id="stepper3">
+            <div class="custom-stepper-circle">
+              <span class="custom-stepper-fraction">
+                <span class="custom-stepper-number">3</span>
+                <span class="custom-stepper-slash">/</span>
+                <span class="custom-stepper-denominator">5</span>
+              </span>
+            </div>
+          </div>
+          <div class="custom-stepper-divider"></div>
+          <div class="custom-stepper-step" id="stepper4">
+            <div class="custom-stepper-circle">
+              <span class="custom-stepper-fraction">
+                <span class="custom-stepper-number">4</span>
+                <span class="custom-stepper-slash">/</span>
+                <span class="custom-stepper-denominator">5</span>
+              </span>
+            </div>
+          </div>
+          <div class="custom-stepper-divider"></div>
+          <div class="custom-stepper-step" id="stepper5">
+            <div class="custom-stepper-circle">
+              <span class="custom-stepper-fraction">
+                <span class="custom-stepper-number">5</span>
+                <span class="custom-stepper-slash">/</span>
+                <span class="custom-stepper-denominator">5</span>
+              </span>
+            </div>
+          </div>
+          <button type="button" class="submit-btn" id="stepperSubmitBtn" style="margin-left:32px;">
+            İlerle
+          </button>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-col left">
+          <div class="footer-title">Site Haritası</div>
+          <a class="footer-link" href="#">Anasayfa</a>
+          <a class="footer-link" href="#">Hekim bilgileri</a>
+          <a class="footer-link" href="#">Nüfus Katsayısı</a>
+          <a class="footer-link" href="#">Hyp Katsayısı</a>
+          <a class="footer-link" href="#">Negatif Performans</a>
+        </div>
+        <div class="footer-col center">
+          © 2025 HYPHESAP.net All Rights Reserved.<br>
+          <span style="font-size:14px;">by mrnobody</span>
+        </div>
+        <div class="footer-col right">
+          <div class="footer-title">İletişim</div>
+          <a class="footer-link" href="mailto:reklam@hyphesap.net">reklam@hyphesap.net</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script>
+    // --- Navigation ve Stepper Fonksiyonları ---
+    function setActiveNav(tabId) {
+      document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+      if (tabId) {
+        const activeTab = document.getElementById(tabId);
+        if (activeTab) activeTab.classList.add('active');
+      }
+    }
+    function updateStepperVisibility() {
+      const wrapper = document.querySelector('.stepper-wrapper');
+      const anyActive = document.querySelector('.custom-stepper-step.active');
+      wrapper.style.display = anyActive ? "" : "none";
+    }
+    function clearStepperActive() {
+      for (let i = 1; i <= 5; i++) document.getElementById('stepper' + i).classList.remove('active');
+      updateStepperVisibility();
+    }
+    function setStepperActive(step) {
+      clearStepperActive();
+      document.getElementById('stepper' + step).classList.add('active');
+      updateStepperVisibility();
+    }
+    function hekimTabClick() {
+      document.getElementById('hesaplaBtn').style.display = 'none';
+      document.getElementById('hekimIframeContainer').style.display = 'block';
+      document.getElementById('hekimIframe').src = "Hekimbilgileri.html";
+      setStepperActive(1);
+      setActiveNav('hekimTab');
+    }
+    function openNufus() {
+      document.getElementById('hesaplaBtn').style.display = 'none';
+      document.getElementById('hekimIframeContainer').style.display = 'block';
+      document.getElementById('hekimIframe').src = "gelmeyennufus.html";
+      setStepperActive(2);
+      setActiveNav('nufusTab');
+    }
+    function openHyp() {
+      document.getElementById('hesaplaBtn').style.display = 'none';
+      document.getElementById('hekimIframeContainer').style.display = 'block';
+      document.getElementById('hekimIframe').src = "hyp.html";
+      setStepperActive(3);
+      setActiveNav('hypTab');
+    }
+    function openAsi() {
+      document.getElementById('hesaplaBtn').style.display = 'none';
+      document.getElementById('hekimIframeContainer').style.display = 'block';
+      document.getElementById('hekimIframe').src = "asi.html";
+      setStepperActive(4);
+      setActiveNav('asiTab');
+    }
+    function openPPerformans() {
+      document.getElementById('hesaplaBtn').style.display = 'none';
+      document.getElementById('hekimIframeContainer').style.display = 'block';
+      document.getElementById('hekimIframe').src = "pperformans.html";
+      setStepperActive(5);
+      setActiveNav('pperfTab');
+    }
+    function showMainContent() {
+      document.getElementById('hesaplaBtn').style.display = 'none';
+      document.getElementById('hekimIframeContainer').style.display = 'block';
+      document.getElementById('hekimIframe').src = "sonuc.html";
+      clearStepperActive();
+      setActiveNav('sonucTab');
+    }
+    document.getElementById('hekimIframe').addEventListener('load', function() {
+      var src = this.src.split('/').pop();
+      switch (src) {
+        case "gelmeyennufus.html": setActiveNav('nufusTab'); setStepperActive(2); break;
+        case "hyp.html": setActiveNav('hypTab'); setStepperActive(3); break;
+        case "asi.html": setActiveNav('asiTab'); setStepperActive(4); break;
+        case "pperformans.html": setActiveNav('pperfTab'); setStepperActive(5); break;
+        case "Hekimbilgileri.html": setActiveNav('hekimTab'); setStepperActive(1); break;
+        case "sonuc.html": setActiveNav('sonucTab'); clearStepperActive(); break;
+        default: setActiveNav(); clearStepperActive();
+      }
+    });
+    window.addEventListener('DOMContentLoaded', updateStepperVisibility);
+
+    // --- Main-card yükseklik ayarı ---
+    function resizeMainCardToIframe() {
+      var iframe = document.getElementById('hekimIframe');
+      var mainCard = document.getElementById('mainCard');
+      let lastHeight = 0;
+      function setHeight() {
+        try {
+          var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          var contentHeight = iframeDoc.body.scrollHeight;
+          var minHeight = 600;
+          var newHeight = Math.max(contentHeight, minHeight);
+          var hekimCard = iframeDoc.querySelector('.main-card');
+          if (hekimCard) newHeight = Math.max(hekimCard.scrollHeight, minHeight);
+          if (lastHeight !== newHeight) {
+            mainCard.style.height = newHeight + "px";
+            iframe.style.height = newHeight + "px";
+            lastHeight = newHeight;
+          }
+        } catch (e) {
+          mainCard.style.height = "900px";
+          iframe.style.height = "900px";
+        }
+      }
+      setHeight();
+      if (iframe.contentWindow) {
+        iframe.contentWindow.addEventListener('resize', setHeight);
+        setInterval(setHeight, 300);
+      }
+    }
+
+    // Stepper ilerletme
+    document.getElementById('stepperSubmitBtn').onclick = function () {
+      let current = 1;
+      for (let i = 1; i <= 5; i++) {
+        if (document.getElementById('stepper' + i).classList.contains('active')) {
+          current = i; break;
+        }
+      }
+      if (current >= 5) { showMainContent(); return; }
+      const next = current + 1;
+      setStepperActive(next);
+      switch (next) {
+        case 2: openNufus(); break;
+        case 3: openHyp(); break;
+        case 4: openAsi(); break;
+        case 5: openPPerformans(); break;
+      }
+    };
+    // "Hesapla" butonu için
+    function openHekimBilgileri() {
+      document.getElementById('hesaplaBtn').style.display = 'none';
+      var iframeContainer = document.getElementById('hekimIframeContainer');
+      var iframe = document.getElementById('hekimIframe');
+      var mainCard = document.getElementById('mainCard');
+      iframe.src = "Hekimbilgileri.html";
+      iframeContainer.style.display = "block";
+      function setIframeHeight() {
+        try {
+          var iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+          var contentHeight = iframeDoc.body.scrollHeight;
+          mainCard.style.height = (contentHeight + 30) + "px";
+          iframe.style.height = contentHeight + "px";
+        } catch (e) {
+          mainCard.style.height = "930px";
+          iframe.style.height = "900px";
+        }
+      }
+      iframe.onload = function() { setTimeout(setIframeHeight, 200); };
+    }
+  </script>
+</body>
+</html>

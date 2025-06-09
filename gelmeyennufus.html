@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Nüfus Tablosu</title>
+  <!-- Poppins fontu ekleniyor -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --header-bg: #a3bfff;
+      --row-separator: #b3d6ff; /* Kutucuk çerçevesiyle aynı renk */
+    }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: #E3EDFF;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 16px;
+      font-weight: 400;
+    }
+    .main-rect {
+      background: #E3EDFF;
+      border-radius: 0;
+      box-shadow: none;
+      margin-top: 0;
+      padding: 0;
+      width: 900px;
+      max-width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: none;
+    }
+    .table-columns {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      width: 100%;
+      justify-content: center;
+    }
+    .half-table {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #E3EDFF;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: none;
+      margin-bottom: 12px;
+      table-layout: fixed;
+    }
+    th, td {
+      padding: 6px 2px;
+      text-align: center;
+      font-size: 16px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 400;
+      background: none;
+      border-bottom: 1.5px solid var(--row-separator);
+    }
+    th.header {
+      background: var(--header-bg) !important;
+      /* color: #22223b !important;  satır kaldırıldı */
+      font-weight: 500 !important;
+      font-size: 16px !important;
+      border-bottom: 2.5px solid var(--header-border);
+      letter-spacing: 0.2px;
+      position: relative;
+      /* Gölge yok */
+      box-shadow: none !important;
+      filter: none !important;
+    }
+    .half-table table thead tr th.header:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    .half-table table thead tr th.header:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    .single-row-table thead tr th.header:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    .single-row-table thead tr th.header:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    /* Remove thead tr border-bottom to eliminate the dark shadow */
+    .half-table table thead tr,
+    .single-row-table thead tr {
+      /* border-bottom: 2.5px solid var(--header-border); */
+      box-shadow: none !important;
+      filter: none !important;
+    }
+    .half-table table tbody tr td, .half-table table tbody tr th,
+    .single-row-table tbody tr td, .single-row-table tbody tr th {
+      border-bottom: 1.5px solid var(--row-separator);
+    }
+    .half-table table tbody tr:last-child td,
+    .half-table table tbody tr:last-child th,
+    .single-row-table tbody tr:last-child td,
+    .single-row-table tbody tr:last-child th {
+      border-bottom: none;
+    }
+    table input[type="number"], table input[type="text"] {
+      width: 60px;
+      padding: 4px 2px;
+      border: 1.5px solid #b3d6ff;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 16px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 400;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.02);
+      -moz-appearance: textfield;
+      margin: 0 1px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    table input[type="number"]::-webkit-input-placeholder,
+    table input[type="text"]::-webkit-input-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    table input[type="number"]::-moz-placeholder,
+    table input[type="text"]::-moz-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    table input[type="number"]:-ms-input-placeholder,
+    table input[type="text"]:-ms-input-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    table input[type="number"]::placeholder,
+    table input[type="text"]::placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    table input[type="number"]::-webkit-outer-spin-button,
+    table input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    table input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    table input[type="number"]:focus, table input[type="text"]:focus {
+      border-color: #388bff;
+      box-shadow: 0 0 0 2px #e3f2fd;
+    }
+    .single-row-table {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    #popupFooter {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 900px;
+      max-width: 100vw;
+      background: #E3EDFF;
+      border-radius: 10px;
+      box-shadow: none;
+      padding: 8px 0;
+      font-size: 16px;
+      font-weight: 400;
+      gap: 6px;
+    }
+    #popupFooter label {
+      /* color: #22223b; satır kaldırıldı */
+      font-weight: 400;
+      font-size: 16px;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+    #popupFooter input {
+      width: 90px;
+      padding: 4px 2px;
+      border: 1.5px solid #b3d6ff;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 16px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 400;
+      outline: none;
+      margin-left: 4px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.02);
+      -moz-appearance: textfield;
+      text-align: center;
+    }
+    #popupFooter input::-webkit-input-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    #popupFooter input::-moz-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    #popupFooter input:-ms-input-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    #popupFooter input::placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    #popupFooter input::-webkit-outer-spin-button,
+    #popupFooter input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    #popupFooter input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    #popupFooter input:focus {
+      border-color: #388bff;
+      box-shadow: 0 0 0 2px #e3f2fd;
+    }
+    #saveButton {
+      padding: 6px 14px;
+      font-size: 16px;
+      background-color: #388bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 500;
+      box-shadow: 0 2px 8px 0 rgba(52,152,219,0.08);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    #saveButton:hover {
+      background-color: #2563eb;
+      box-shadow: 0 4px 16px 0 rgba(52,152,219,0.12);
+    }
+    @media (max-width: 950px) {
+      .main-rect, #popupFooter {
+        max-width: 98vw;
+        width: 98vw;
+        padding: 6px 0;
+      }
+      .table-columns {
+        flex-direction: column;
+        gap: 0;
+      }
+      .half-table {
+        width: 100%;
+      }
+    }
+    @media (max-width: 700px) {
+      .main-rect, #popupFooter {
+        padding: 2px 0;
+      }
+      table input[type="number"], table input[type="text"], #popupFooter input {
+        width: 38px;
+        font-size: 15px;
+      }
+      #popupFooter {
+        flex-direction: column;
+        gap: 6px;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-rect">
+    <div class="table-columns">
+      <div class="half-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="header">Hasta Grubu</th>
+              <th class="header">Toplam Nüfus</th>
+              <th class="header">Gelmeyen Nüfus</th>
+              <th class="header">İlgili Nüfus Katsayısı</th>
+            </tr>
+          </thead>
+          <tbody id="tableBodyLeft"></tbody>
+        </table>
+      </div>
+      <div class="half-table">
+        <table>
+          <thead>
+            <tr>
+              <th class="header">Hasta Grubu</th>
+              <th class="header">Toplam Nüfus</th>
+              <th class="header">Gelmeyen Nüfus</th>
+              <th class="header">İlgili Nüfus Katsayısı</th>
+            </tr>
+          </thead>
+          <tbody id="tableBodyRight"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Cezaevi Nüfus tek satır -->
+    <table class="single-row-table">
+      <thead>
+        <tr>
+          <th class="header">Hasta Grubu</th>
+          <th class="header">Toplam Nüfus</th>
+          <th class="header">Gelmeyen Nüfus</th>
+          <th class="header">İlgili Nüfus Katsayısı</th>
+        </tr>
+      </thead>
+      <tbody id="tableBodyCezaevi"></tbody>
+    </table>
+  </div>
+  <div id="popupFooter">
+    <div>
+      <label>
+        Toplam Nüfus:
+        <input type="number" id="totalNufusSum" readonly>
+      </label>
+    </div>
+    <div>
+      <label>
+        Hesaba Esas Nüfus Puanı:
+        <input type="number" id="hesapNufusPuan" readonly>
+      </label>
+    </div>
+    <div>
+      <button id="saveButton" onclick="saveValues()">Kaydet</button>
+    </div>
+  </div>
+  <script>
+    // Satır başlıkları ve katsayılar
+    const rowHeaders = [
+      "0-28 gün", "29-365 gün", "13-59 ay", "60 ay-9 yaş", "10-14 yaş",
+      "15-19 yaş", "20-24 yaş", "25-29 yaş", "30-34 yaş", "35-39 yaş",
+      "40-44 yaş", "45-49 yaş", "50-54 yaş", "55-59 yaş", "60-64 yaş",
+      "65+ yaş", "Gebe", "Lohusa", "Cezaevi Nüfus"
+    ];
+    const fixedKatsayilar = [
+      5, 2, 1.6, 0.82, 0.58,
+      0.55, 0.49, 0.49, 0.52, 0.58,
+      0.78, 0.89, 1.04, 1.26, 1.48,
+      1.6, 3, 3, 2.25
+    ];
+
+    // İlk 9 ve ikinci 9 için ayrı tbody'ler
+    let tbodyLeft = "";
+    let tbodyRight = "";
+    for (let i = 0; i < 9; i++) {
+      tbodyLeft += `<tr>
+        <th>${rowHeaders[i]}</th>
+        <td><input type="number" id="cell-toplam-${i}" placeholder="0" min="0" max="9999" oninput="updateCalculations()" autocomplete="off"></td>
+        <td><input type="number" id="cell-gelmeyen-${i}" placeholder="0" min="0" max="9999" oninput="updateCalculations()" autocomplete="off"></td>
+        <td><input type="text" id="cell-katsayi-${i}" value="${fixedKatsayilar[i]}" readonly></td>
+      </tr>`;
+    }
+    for (let i = 9; i < 18; i++) {
+      tbodyRight += `<tr>
+        <th>${rowHeaders[i]}</th>
+        <td><input type="number" id="cell-toplam-${i}" placeholder="0" min="0" max="9999" oninput="updateCalculations()" autocomplete="off"></td>
+        <td><input type="number" id="cell-gelmeyen-${i}" placeholder="0" min="0" max="9999" oninput="updateCalculations()" autocomplete="off"></td>
+        <td><input type="text" id="cell-katsayi-${i}" value="${fixedKatsayilar[i]}" readonly></td>
+      </tr>`;
+    }
+    document.getElementById("tableBodyLeft").innerHTML = tbodyLeft;
+    document.getElementById("tableBodyRight").innerHTML = tbodyRight;
+
+    // Cezaevi Nüfus satırı
+    let tbodyCezaevi = `<tr>
+      <th>${rowHeaders[18]}</th>
+      <td><input type="number" id="cell-toplam-18" placeholder="0" min="0" max="9999" oninput="updateCalculations()" autocomplete="off"></td>
+      <td><input type="number" id="cell-gelmeyen-18" placeholder="0" min="0" max="9999" oninput="updateCalculations()" autocomplete="off"></td>
+      <td><input type="text" id="cell-katsayi-18" value="${fixedKatsayilar[18]}" readonly></td>
+    </tr>`;
+    document.getElementById("tableBodyCezaevi").innerHTML = tbodyCezaevi;
+
+    function updateCalculations(){
+      const rowCount = rowHeaders.length;
+      let totalSum = 0;
+      let gruplar = [];
+      for(let i = 0; i < rowCount; i++){
+        let t = parseFloat(document.getElementById("cell-toplam-" + i).value) || 0;
+        let g = parseFloat(document.getElementById("cell-gelmeyen-" + i).value) || 0;
+        let katsayi = parseFloat(document.getElementById("cell-katsayi-" + i).value);
+        totalSum += t;
+        gruplar.push({
+          index: i,
+          toplam: t,
+          gelmeyen: g,
+          katsayi: katsayi,
+          puan: (t - (g / 2)) * katsayi
+        });
+      }
+
+      // Nüfus tipi kontrolü (cookie'den)
+      function getCookie(name){
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(";");
+        for(let i = 0; i < ca.length; i++){
+          let c = ca[i].trim();
+          if(c.indexOf(nameEQ) === 0)
+            return decodeURIComponent(c.substring(nameEQ.length));
+        }
+        return null;
+      }
+      let nufusTipi = null;
+      let hekimFormCookie = getCookie("hekimForm");
+      if (hekimFormCookie) {
+        try {
+          let hekimData = JSON.parse(hekimFormCookie);
+          nufusTipi = hekimData.nufusTipi || null;
+        } catch (e) {}
+      }
+
+      let puanSum = 0;
+
+      if(nufusTipi === "Normal Nüfus" || nufusTipi === "Sıfır Nüfus") {
+        // Normal Nüfus veya Sıfır Nüfus
+        if(totalSum > 3500){
+          gruplar.sort((a, b) => b.katsayi - a.katsayi);
+          let kalan = 3500;
+          let yeniGruplar = [];
+          for(let grup of gruplar){
+            if(kalan <= 0) {
+              yeniGruplar.push({...grup, toplam: 0, gelmeyen: 0});
+              continue;
+            }
+            if(grup.toplam <= kalan){
+              yeniGruplar.push(grup);
+              kalan -= grup.toplam;
+            } else {
+              let oran = kalan / grup.toplam;
+              yeniGruplar.push({
+                ...grup,
+                toplam: kalan,
+                gelmeyen: grup.gelmeyen * oran
+              });
+              kalan = 0;
+            }
+          }
+          puanSum = yeniGruplar.reduce((sum, grup) => sum + ((grup.toplam - (grup.gelmeyen / 2)) * grup.katsayi), 0);
+        } else {
+          puanSum = gruplar.reduce((sum, grup) => sum + grup.puan, 0);
+        }
+      } else if(nufusTipi === "Entegre Nüfus") {
+        // Entegre Nüfus
+        gruplar.sort((a, b) => b.katsayi - a.katsayi);
+        let kalan = 2400;
+        let yeniGruplar = [];
+        for(let grup of gruplar){
+          if(kalan <= 0) {
+            yeniGruplar.push({...grup, toplam: 0, gelmeyen: 0});
+            continue;
+          }
+          if(grup.toplam <= kalan){
+            yeniGruplar.push(grup);
+            kalan -= grup.toplam;
+          } else {
+            let oran = kalan / grup.toplam;
+            yeniGruplar.push({
+              ...grup,
+              toplam: kalan,
+              gelmeyen: grup.gelmeyen * oran
+            });
+            kalan = 0;
+          }
+        }
+        let entegrePuan = yeniGruplar.reduce((sum, grup) => sum + ((grup.toplam - (grup.gelmeyen / 2)) * grup.katsayi), 0);
+        puanSum = entegrePuan * 1.65;
+      } else if(nufusTipi === "Zorunlu Düşük Nüfus") {
+        // Zorunlu Düşük Nüfus
+        gruplar.sort((a, b) => b.katsayi - a.katsayi);
+        let kalan1 = 1350;
+        let kalan2 = 2400 - 1350;
+        let toplamA = 0;
+        let toplamB = 0;
+        for(let grup of gruplar){
+          // İlk 1350 için
+          if(kalan1 > 0){
+            if(grup.toplam <= kalan1){
+              toplamA += (grup.toplam - (grup.gelmeyen / 2)) * grup.katsayi;
+              kalan1 -= grup.toplam;
+            } else {
+              let oran = kalan1 / grup.toplam;
+              toplamA += ((kalan1 - (grup.gelmeyen * oran / 2)) * grup.katsayi);
+              kalan2 -= (grup.toplam - kalan1);
+              kalan1 = 0;
+            }
+          }
+          // 1351-2400 arası için
+          else if(kalan2 > 0){
+            let kalanGrup = grup.toplam;
+            if(kalanGrup <= kalan2){
+              toplamB += (kalanGrup - (grup.gelmeyen / 2)) * grup.katsayi;
+              kalan2 -= kalanGrup;
+            } else {
+              let oran = kalan2 / kalanGrup;
+              toplamB += ((kalan2 - (grup.gelmeyen * oran / 2)) * grup.katsayi);
+              kalan2 = 0;
+            }
+          }
+        }
+        puanSum = (toplamA * 2) + toplamB;
+      } else {
+        // Diğer veya seçilmemişse klasik hesap
+        puanSum = gruplar.reduce((sum, grup) => sum + grup.puan, 0);
+      }
+
+      document.getElementById("totalNufusSum").value = totalSum;
+      document.getElementById("hesapNufusPuan").value = puanSum.toPrecision(5);
+    }
+
+    function setCookie(name, value, days){
+      let expires = "";
+      if(days){
+        const date = new Date();
+        date.setTime(date.getTime() + days*24*60*60*1000);
+        expires = "; expires=" + date.toUTCString();
+      }
+      document.cookie = name + "=" + encodeURIComponent(value) + expires + "; path=/; SameSite=Lax";
+    }
+
+    function getCookie(name){
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(";");
+      for(let i = 0; i < ca.length; i++){
+        let c = ca[i].trim();
+        if(c.indexOf(nameEQ) === 0)
+          return decodeURIComponent(c.substring(nameEQ.length));
+      }
+      return null;
+    }
+
+    function saveValues(){
+      let data = {};
+      for(let i = 0; i < rowHeaders.length; i++){
+        data["cell-toplam-" + i] = document.getElementById("cell-toplam-" + i).value;
+        data["cell-gelmeyen-" + i] = document.getElementById("cell-gelmeyen-" + i).value;
+      }
+      data.totalNufusSum = document.getElementById("totalNufusSum").value;
+      data.hesapNufusPuan = document.getElementById("hesapNufusPuan").value;
+      setCookie("nufusTabloData", JSON.stringify(data), 365);
+      alert("Veriler kaydedildi!");
+    }
+
+    function loadValues(){
+      let stored = getCookie("nufusTabloData");
+      if(stored){
+        let data = JSON.parse(stored);
+        for(let i = 0; i < rowHeaders.length; i++){
+          if(data["cell-toplam-" + i] !== undefined){
+            document.getElementById("cell-toplam-" + i).value = data["cell-toplam-" + i];
+          }
+          if(data["cell-gelmeyen-" + i] !== undefined){
+            document.getElementById("cell-gelmeyen-" + i).value = data["cell-gelmeyen-" + i];
+          }
+        }
+        updateCalculations();
+      }
+    }
+
+    window.onload = loadValues;
+  </script>
+</body>
+</html>

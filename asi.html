@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Negatif Performans Hesaplama</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --header-bg: #99BBFF;
+      --row-separator: #b3d6ff;
+      --main-bg: #E3EDFF;
+      --ayirici: #3377FF;
+    }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--main-bg);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: #22223b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    table {
+      width: 100%;
+      max-width: 900px;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: var(--main-bg);
+      border-radius: 10px;
+      box-shadow: none;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 1rem;
+      margin: 48px 0 0 0;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 10px 6px;
+      text-align: center;
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 400;
+      background: none;
+      border-bottom: 1.5px solid var(--row-separator);
+      color: #22223b;
+    }
+    th {
+      background: var(--header-bg);
+      font-weight: 500;
+      font-size: 1.05rem;
+      border-bottom: 2.5px solid #388bff;
+      letter-spacing: 0.2px;
+      position: relative;
+    }
+    th:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    th:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    tr:last-child td, tr:last-child th {
+      border-bottom: none;
+    }
+    input[type="number"] {
+      width: 90px;
+      padding: 8px 10px;
+      border: 1.5px solid var(--row-separator);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      text-align: center;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.02);
+    }
+    input[type="number"]:focus {
+      border-color: #388bff;
+      box-shadow: 0 0 0 2px #e3f2fd;
+    }
+    input[type="number"]::-webkit-input-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    input[type="number"]::-moz-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    input[type="number"]:-ms-input-placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    input[type="number"]::placeholder {
+      text-align: center;
+      color: #b3b3b3;
+      opacity: 1;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    #footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 30px auto 0 auto;
+      width: 100%;
+      max-width: 900px;
+      background: var(--main-bg);
+      padding: 18px 24px;
+      border-radius: 10px;
+      box-shadow: none;
+      font-size: 1.05rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 500;
+      gap: 16px;
+    }
+    #footer button {
+      padding: 10px 24px;
+      font-size: 1.05rem;
+      background-color: #388bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 500;
+      box-shadow: 0 2px 8px 0 rgba(52,152,219,0.08);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    #footer button:hover {
+      background-color: #2563eb;
+      box-shadow: 0 4px 16px 0 rgba(52,152,219,0.12);
+    }
+    #result {
+      font-weight: bold;
+      color: #2c3e50;
+      font-size: 1.1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      letter-spacing: 0.5px;
+    }
+    .ayirici {
+      width: 100%;
+      max-width: 900px;
+      height: 4px;
+      background: #3377FF;
+      border-radius: 2px;
+      margin: 32px auto 0 auto;
+    }
+    .bilgi-text {
+      width: 100%;
+      max-width: 900px;
+      margin: 18px auto 0 auto;
+      color: #22223b;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 1.05rem;
+      text-align: center;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+    }
+    .nobet-row {
+      width: 100%;
+      max-width: 900px;
+      margin: 18px auto 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 1.05rem;
+      color: #22223b;
+    }
+    .nobet-row label {
+      font-weight: 500;
+    }
+    .nobet-row select, .nobet-row input[type="number"] {
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 1rem;
+      border: 1.5px solid var(--row-separator);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.02);
+      width: 90px;
+      text-align: center;
+    }
+    .nobet-row select:focus, .nobet-row input[type="number"]:focus {
+      border-color: #388bff;
+      box-shadow: 0 0 0 2px #e3f2fd;
+    }
+    @media (max-width: 1000px) {
+      #footer, table, .ayirici, .bilgi-text, .nobet-row {
+        max-width: 98vw;
+        font-size: 0.95rem;
+      }
+      input[type="number"], .nobet-row select, .nobet-row input[type="number"] {
+        width: 60px;
+        font-size: 0.95rem;
+      }
+    }
+    @media (max-width: 700px) {
+      #footer, table, .ayirici, .bilgi-text, .nobet-row {
+        font-size: 0.92rem;
+        padding: 6px 0;
+      }
+      input[type="number"], .nobet-row select, .nobet-row input[type="number"] {
+        width: 38px;
+        font-size: 0.92rem;
+      }
+      #footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+      .nobet-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <table>
+      <thead>
+        <tr>
+          <th>Negatif Performans</th>
+          <th>Gereken</th>
+          <th>Yapılan</th>
+          <th>Başarı Yüzdesi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1. Aşı</td>
+          <td><input type="number" id="gereken1" oninput="recalc()"></td>
+          <td><input type="number" id="yapilan1" oninput="recalc()"></td>
+          <td><span id="perc1">100</span>%</td>
+        </tr>
+        <tr>
+          <td>2. Bebek İzlem</td>
+          <td><input type="number" id="gereken2" oninput="recalc()"></td>
+          <td><input type="number" id="yapilan2" oninput="recalc()"></td>
+          <td><span id="perc2">100</span>%</td>
+        </tr>
+        <tr>
+          <td>3. Çocuk İzlem</td>
+          <td><input type="number" id="gereken3" oninput="recalc()"></td>
+          <td><input type="number" id="yapilan3" oninput="recalc()"></td>
+          <td><span id="perc3">100</span>%</td>
+        </tr>
+        <tr>
+          <td>4. Gebe İzlem</td>
+          <td><input type="number" id="gereken4" oninput="recalc()"></td>
+          <td><input type="number" id="yapilan4" oninput="recalc()"></td>
+          <td><span id="perc4">100</span>%</td>
+        </tr>
+        <tr>
+          <td>5. Lohusa İzlem</td>
+          <td><input type="number" id="gereken5" oninput="recalc()"></td>
+          <td><input type="number" id="yapilan5" oninput="recalc()"></td>
+          <td><span id="perc5">100</span>%</td>
+        </tr>
+      </tbody>
+    </table>
+  <div id="footer">
+    <span id="result">x = 100</span>
+    <button id="closeFooter" type="button">Kapat</button>
+    <button id="saveBtn" type="button">Kaydet</button>
+  </div>
+  <div class="ayirici"></div>
+  <div class="bilgi-text">
+    Performans kaybınız yoksa veri girişi yapmanıza gerek yoktur.
+  </div>
+  <div class="ayirici"></div>
+  <div class="nobet-row">
+    <label for="nobetSaat">Entegre tutulmayan nöbet:</label>
+    <select id="nobetSaat">
+      <option value="0">0</option>
+      <option value="8">8</option>
+      <option value="16">16</option>
+      <option value="24">24</option>
+      <option value="32">32</option>
+      <option value="40">40</option>
+      <option value="48">48</option>
+      <option value="56">56</option>
+      <option value="64">64</option>
+      <option value="72">72</option>
+      <option value="80">80</option>
+      <option value="88">88</option>
+      <option value="96">96</option>
+    </select>
+    <input type="number" id="nobetEk" min="0" max="999" placeholder="Ek Saat">
+  </div>
+  <script>
+    // Hesaplama: Her satır için Başarı Yüzdesi = (Yapılan / Gereken) * 100
+    function recalc() {
+      let totalPenalty = 0;
+      for (let i = 1; i <= 5; i++) {
+        const gerekenInput = document.getElementById("gereken" + i).value;
+        const yapilanInput = document.getElementById("yapilan" + i).value;
+        let percentage = 100; // Giriş yapılmamışsa varsayılan yüzde
+
+        const gereken = parseFloat(gerekenInput);
+        const yapilan = parseFloat(yapilanInput);
+
+        // "Gereken" değeri geçerli ve sıfırdan büyükse hesaplama yap: (Yapılan/Gereken)*100
+        if (!isNaN(gereken) && gereken > 0 && !isNaN(yapilan)) {
+          percentage = (yapilan / gereken) * 100;
+        }
+        percentage = Math.round(percentage * 10) / 10;
+        document.getElementById("perc" + i).innerText = percentage;
+
+        // Ceza puanı hesaplaması:
+        // - Yüzde > 98   ⇒ 0 puan
+        // - Yüzde <= 98 ve > 96 ⇒ 2 puan
+        // - Yüzde <= 96 ve > 94 ⇒ 4 puan
+        // - Yüzde <= 94 ve > 89 ⇒ 6 puan
+        // - Yüzde <= 89 ve >= 85 ⇒ 8 puan
+        // - Yüzde < 85   ⇒ 10 puan
+        let penalty = 0;
+        if (percentage > 98) {
+          penalty = 0;
+        } else if (percentage <= 98 && percentage > 96) {
+          penalty = 2;
+        } else if (percentage <= 96 && percentage > 94) {
+          penalty = 4;
+        } else if (percentage <= 94 && percentage > 89) {
+          penalty = 6;
+        } else if (percentage <= 89 && percentage >= 85) {
+          penalty = 8;
+        } else if (percentage < 85) {
+          penalty = 10;
+        }
+
+        totalPenalty += penalty;
+      }
+      if (totalPenalty > 20) totalPenalty = 20;
+      const x = 100 - totalPenalty;
+      document.getElementById("result").innerText = "x = " + x;
+    }
+
+    // Cookie oluşturma fonksiyonu (365 günlük süreyle)
+    function setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+      const expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + encodeURIComponent(cvalue) + ";" + expires + ";path=/";
+    }
+
+    // Cookie okuma fonksiyonu
+    function getCookie(cname) {
+      const name = cname + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const ca = decodedCookie.split(';');
+      for(let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    // Kullanıcı girdilerini cookie'ye kaydeden fonksiyon
+    function saveInputs() {
+      const data = { gerek: [], yap: [], nobetSaat: "", nobetEk: "" };
+      for (let i = 1; i <= 5; i++) {
+        const gerekVal = document.getElementById("gereken" + i).value;
+        const yapVal = document.getElementById("yapilan" + i).value;
+        data.gerek.push(gerekVal);
+        data.yap.push(yapVal);
+      }
+      data.nobetSaat = document.getElementById("nobetSaat").value;
+      data.nobetEk = document.getElementById("nobetEk").value;
+      setCookie("performanceData", JSON.stringify(data), 365);
+      alert("Girdiler kaydedildi.");
+    }
+
+    // Cookie'den kullanıcı girdilerini yükleyen fonksiyon
+    function loadInputs() {
+      const jsonData = getCookie("performanceData");
+      if (jsonData) {
+        try {
+          const data = JSON.parse(decodeURIComponent(jsonData));
+          for (let i = 1; i <= 5; i++) {
+            document.getElementById("gereken" + i).value = data.gerek[i - 1] || "";
+            document.getElementById("yapilan" + i).value = data.yap[i - 1] || "";
+          }
+          if (data.nobetSaat !== undefined)
+            document.getElementById("nobetSaat").value = data.nobetSaat;
+          if (data.nobetEk !== undefined)
+            document.getElementById("nobetEk").value = data.nobetEk;
+        } catch(e) {
+          console.error("Cookie okunurken hata:", e);
+        }
+      }
+      recalc();
+    }
+
+    // Sayfa yüklendiğinde otomatik olarak verileri yükle
+    document.addEventListener("DOMContentLoaded", function() {
+      loadInputs();
+      document.getElementById("closeFooter").onclick = function() {
+        window.close();
+      };
+      document.getElementById("saveBtn").onclick = function() {
+        saveInputs();
+      };
+    });
+  </script>
+</body>
+</html>

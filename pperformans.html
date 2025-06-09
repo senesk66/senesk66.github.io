@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Performans ve Teşvikler</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --header-bg: #99BBFF;
+      --row-separator: #b3d6ff;
+      --main-bg: #E3EDFF;
+      --info-bg: ##99BBFF;
+      --info-border: #b3d6ff;
+      --info-text: #3A3A3C;
+      --card-bg: #99BBFF;
+      --input-bg: #fff;
+      --input-border: #b3d6ff;
+      --input-focus: #388bff;
+    }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--main-bg);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      color: #22223b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .main-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px 32px;
+      justify-content: center;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 950px;
+      margin-top: 40px;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.07);
+      padding: 20px 18px 14px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 240px;
+      max-width: 320px;
+      flex: 1 1 240px;
+      margin: 0;
+      position: relative;
+    }
+    .card-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 1.08rem;
+      font-weight: 500;
+      color: #22223b;
+      letter-spacing: 0.2px;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      line-height: 1.2;
+    }
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--main-bg);
+      border: 2px solid var(--row-separator);
+      color: #388bff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.2s, border 0.2s;
+      margin-left: 2px;
+      user-select: none;
+    }
+    .info-icon:hover {
+      background: #e3edff;
+      border-color: #388bff;
+    }
+    .info-tooltip {
+      display: none;
+      position: absolute;
+      left: 50%;
+      top: 36px;
+      transform: translateX(-50%);
+      width: 378px;
+      height: 194px;
+      background: var(--info-bg);
+      border: 2px solid var(--info-border);
+      border-radius: 10px;
+      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
+      z-index: 10;
+      padding: 24px 22px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 16px;
+      color: var(--info-text);
+      font-weight: 400;
+      line-height: 1.5;
+      text-align: left;
+      pointer-events: none;
+      white-space: pre-line;
+    }
+    .info-icon:focus + .info-tooltip,
+    .info-icon:hover + .info-tooltip {
+      display: block;
+      pointer-events: auto;
+    }
+    .info-icon:active + .info-tooltip {
+      display: block;
+      pointer-events: auto;
+    }
+    .input-row {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .input-label-row {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0;
+    }
+    .input-label-col {
+      width: 150px;
+      text-align: center;
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      color: #22223b;
+      font-weight: 500;
+      padding-bottom: 2px;
+    }
+    .input-label-col.gereken-label {
+      position: relative;
+      left: -3px;
+    }
+    .input-label-col.yapilan-label {
+      position: relative;
+      left: -8px;
+    }
+    .input-box {
+      width: 150px;
+      padding: 6px 7px;
+      border: 1.5px solid var(--input-border);
+      border-radius: 10px;
+      background: var(--input-bg);
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      text-align: center;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.02);
+      color: #22223b;
+    }
+    .input-box:focus, .input-select:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 2px #e3f2fd;
+    }
+    .input-box[type="number"]::-webkit-outer-spin-button,
+    .input-box[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .input-box[type="number"] {
+      -moz-appearance: textfield;
+    }
+    .input-box[type="number"] {
+      min: 0;
+      max: 999;
+    }
+    .input-box.percent-box {
+      width: 75px;
+      min-width: 50px;
+      max-width: 90px;
+      padding-left: 0;
+      padding-right: 0;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
+    /* Hekimbilgileri.html dropdown stili */
+    .input-select {
+      width: 220px;
+      padding: 10px 36px 10px 14px;
+      border: 1.5px solid var(--row-separator);
+      border-radius: 10px;
+      background: #fff url("data:image/svg+xml,%3Csvg width='16' height='16' fill='gray' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%23388bff' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center/18px 18px;
+      font-size: 1rem;
+      font-family: 'Poppins', Arial, sans-serif;
+      text-align: left;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.02);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      color: #22223b;
+    }
+    .input-select:focus {
+      border-color: #388bff;
+      box-shadow: 0 0 0 2px #e3f2fd;
+    }
+    .form-checkbox, .form-radio {
+      accent-color: #388bff;
+      width: 18px;
+      height: 18px;
+      margin-right: 6px;
+    }
+    input[type="checkbox"].form-checkbox {
+      border-radius: 10px;
+      accent-color: #388bff;
+      width: 18px;
+      height: 18px;
+    }
+    .form-checkbox-label, .form-radio-label {
+      font-size: 15px;
+      font-weight: 400;
+      color: #3A3A3C;
+      cursor: pointer;
+      margin-right: 18px;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .checkbox-row {
+      display: flex;
+      flex-direction: row;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 0;
+    }
+    .checkbox-row-bottom {
+      display: flex;
+      flex-direction: row;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    .group-flex {
+      display: flex;
+      flex-direction: row;
+      gap: 28px;
+      width: 100%;
+      justify-content: center;
+      align-items: flex-start;
+      margin-bottom: 0;
+    }
+    @media (max-width: 900px) {
+      .main-flex, .group-flex {
+        flex-direction: column;
+        gap: 18px 0;
+        align-items: center;
+      }
+      .card {
+        min-width: 180px;
+        max-width: 98vw;
+        width: 98vw;
+      }
+      .input-select {
+        width: 98vw;
+        min-width: 0;
+        max-width: 100vw;
+      }
+    }
+    @media (max-width: 600px) {
+      .main-flex, .group-flex {
+        margin-top: 12px;
+        gap: 10px 0;
+      }
+      .card {
+        padding: 10px 2vw 8px 2vw;
+      }
+      .input-row, .checkbox-row, .checkbox-row-bottom, .input-label-row {
+        flex-direction: column;
+        gap: 4px;
+        align-items: stretch;
+      }
+      .input-label-col {
+        width: 98vw;
+        min-width: 0;
+        max-width: 100vw;
+      }
+      .input-box, .input-select {
+        width: 98vw;
+        min-width: 0;
+        max-width: 100vw;
+      }
+      .input-box.percent-box {
+        width: 45vw;
+        min-width: 24px;
+        max-width: 60vw;
+      }
+      .info-tooltip {
+        width: 90vw;
+        min-width: 0;
+        max-width: 98vw;
+        left: 0;
+        right: 0;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-flex">
+    <!-- Günlük Muayene Hedefi ve Akılcı İlaç Reçete yanyana -->
+    <div class="group-flex">
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">Günlük Muayene Hedefi</span>
+          <span class="info-icon" tabindex="0">i</span>
+          <div class="info-tooltip">
+            Buraya Günlük Muayene Hedefi ile ilgili açıklama yazabilirsiniz.
+          </div>
+        </div>
+        <div class="input-label-row">
+          <span class="input-label-col gereken-label">Gereken</span>
+          <span class="input-label-col yapilan-label">Yapılan</span>
+        </div>
+        <div class="input-row">
+          <input type="number" id="gereken" class="input-box" min="0" max="999" oninput="validateInput(this); updateBasari();" placeholder="0" step="1" onkeydown="return isNumberKey(event)">
+          <input type="number" id="yapilan" class="input-box" min="0" max="999" oninput="validateInput(this); updateBasari();" placeholder="0" step="1" onkeydown="return isNumberKey(event)">
+          <input type="text" id="basari" class="input-box percent-box" readonly placeholder="%">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">Akılcı İlaç Reçete</span>
+          <span class="info-icon" tabindex="0">i</span>
+          <div class="info-tooltip">
+            Buraya Akılcı İlaç Reçete ile ilgili açıklama yazabilirsiniz.
+          </div>
+        </div>
+        <div class="checkbox-row">
+          <label class="form-checkbox-label"><input type="checkbox" class="form-checkbox" id="nsaid">NSAID</label>
+          <label class="form-checkbox-label"><input type="checkbox" class="form-checkbox" id="ppi">PPI</label>
+        </div>
+        <div class="checkbox-row-bottom">
+          <label class="form-checkbox-label"><input type="checkbox" class="form-checkbox" id="antibiyotik">Antibiyotik</label>
+        </div>
+      </div>
+    </div>
+    <!-- Memnuniyet ve Başvuru Teşvik yanyana -->
+    <div class="group-flex">
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">Memnuniyet Teşvik</span>
+          <span class="info-icon" tabindex="0">i</span>
+          <div class="info-tooltip">
+            Buraya Memnuniyet Teşvik ile ilgili açıklama yazabilirsiniz.
+          </div>
+        </div>
+        <div class="input-row">
+          <select id="memnuniyet" class="input-select">
+            <option value="Başarısız">Başarısız</option>
+            <option value="Başarılı">Başarılı</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">Başvuru Teşvik</span>
+          <span class="info-icon" tabindex="0">i</span>
+          <div class="info-tooltip">
+            Buraya Başvuru Teşvik ile ilgili açıklama yazabilirsiniz.
+          </div>
+        </div>
+        <div class="input-row">
+          <select id="basvuru" class="input-select">
+            <option value="Başarısız">Başarısız</option>
+            <option value="Başarılı">Başarılı</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <!-- Destek Ödemesi ve Kronik Hastalık Takibi Teşvik yanyana -->
+    <div class="group-flex">
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">Destek Ödemesi</span>
+          <span class="info-icon" tabindex="0">i</span>
+          <div class="info-tooltip">
+            Buraya Destek Ödemesi ile ilgili açıklama yazabilirsiniz.
+          </div>
+        </div>
+        <div class="input-row">
+          <select id="destek" class="input-select">
+            <option value="Alıyorum">Alıyorum</option>
+            <option value="Almıyorum">Almıyorum</option>
+          </select>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title-row">
+          <span class="card-title">Kronik Hastalık Takibi Teşvik</span>
+          <span class="info-icon" tabindex="0">i</span>
+          <div class="info-tooltip">
+            Buraya Kronik Hastalık Takibi Teşvik ile ilgili açıklama yazabilirsiniz.
+          </div>
+        </div>
+        <div class="input-row">
+          <select id="kronik" class="input-select">
+            <option value="0-39">%0-39 arası</option>
+            <option value="40-70">%40-70 arası</option>
+            <option value="70+">%70 ve üzeri</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Sadece 0-999 arası değer ve negatif değer engelleme
+    function validateInput(el) {
+      let val = el.value;
+      if (val === "") return;
+      val = parseInt(val);
+      if (isNaN(val) || val < 0) el.value = 0;
+      else if (val > 999) el.value = 999;
+      else el.value = val;
+    }
+    // Klavyeden -,+,e gibi karakterleri engelle
+    function isNumberKey(evt) {
+      let charCode = evt.which ? evt.which : evt.keyCode;
+      // 48-57 arası rakamlar, 8 backspace, 9 tab, 37-40 ok tuşları, 46 delete, 96-105 numpad rakamlar
+      if (
+        (charCode >= 48 && charCode <= 57) ||
+        (charCode >= 96 && charCode <= 105) ||
+        charCode === 8 || charCode === 9 ||
+        (charCode >= 37 && charCode <= 40) ||
+        charCode === 46
+      ) {
+        return true;
+      }
+      return false;
+    }
+    // Başarı Yüzdesi Hesaplama (en fazla 4 hane)
+    function updateBasari() {
+      const gereken = parseFloat(document.getElementById('gereken').value);
+      const yapilan = parseFloat(document.getElementById('yapilan').value);
+      let basari = '';
+      if (!isNaN(gereken) && gereken > 0 && !isNaN(yapilan)) {
+        let val = (yapilan / gereken) * 100;
+        basari = val.toFixed(1);
+        if (basari.length > 4) basari = basari.slice(0, 4);
+        basari += " %";
+      }
+      document.getElementById('basari').value = basari;
+    }
+    // Up/down oklarını kaldır
+    document.addEventListener("DOMContentLoaded", function() {
+      let inputs = document.querySelectorAll('.input-box[type="number"]');
+      inputs.forEach(function(input) {
+        input.addEventListener('wheel', function(e) { e.preventDefault(); });
+      });
+    });
+  </script>
+</body>
+</html>

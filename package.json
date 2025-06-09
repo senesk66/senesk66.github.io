@@ -1,0 +1,7 @@
+{
+    "name": "hyphesap",
+    "version": "1.0.0",
+    "dependencies": {
+        "figma-developer-mcp": "latest"
+    }
+}
